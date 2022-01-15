@@ -7,11 +7,20 @@ html,
 body {
   height: 100vh;
   font-family: "Poppins";
-  background: rgb(122, 63, 251);
-  background: radial-gradient(
-    circle,
-    rgba(122, 63, 251, 1) 0%,
-    rgba(252, 70, 166, 1) 82%
+  background-image: linear-gradient(
+    to left bottom,
+    #ff4db2,
+    #f651c2,
+    #eb58d1,
+    #dd5fe0,
+    #cc67ee,
+    #e266e0,
+    #f267d3,
+    #ff6bc6,
+    #ff829d,
+    #ffab7f,
+    #ffd77a,
+    #ffff97
   );
 }
 .webgl {
