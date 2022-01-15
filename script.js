@@ -3,6 +3,17 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+// const near = 2;
+//     const far = 5;
+//     const color = 'white';
+// scene.fog = new THREE.Fog(color, near, far);
+
+// const geometry = new THREE.PlaneGeometry( 10, 10 );
+// const material = new THREE.MeshStandardMaterial( {color: 0x33fdfd, side: THREE.DoubleSide, roughness:0.1, metalness: 0.4, refractionRatio:0 } );
+// const plane = new THREE.Mesh( geometry, material );
+// plane.rotation.set(Math.PI/2,0,0)
+// plane.position.set(0,-2,0)
+// scene.add( plane );
 
 // GLTF Loader
 
@@ -15,8 +26,13 @@ loader.load(
 	    function ( gltf ) {
         obj = gltf.scene
 		scene.add( obj );
-        obj.scale.set(0.08,0.08,0.08)
-        obj.rotation.set(0.3,0.8,-0.2)
+        obj.scale.set(0.065,0.08,0.065)
+        obj.rotation.set(0.7,0.1,-0.3)
+        //obj.rotation.set(0,0,0)
+        obj.position.set(0,0,0)
+
+        obj.castShadow = true; //default is false
+        obj.receiveShadow = false; //default
         
         // mixer1 = new THREE.AnimationMixer(obj);
 	    // console.log(gltf.animations)
@@ -25,13 +41,31 @@ loader.load(
     }
 );
 
+// const planeGeometry = new THREE.PlaneGeometry( 20, 20, 32, 32 );
+// const planeMaterial = new THREE.MeshStandardMaterial( { color: 0x000000 } )
+// const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+// plane.receiveShadow = true;
+// plane.position.set(0,-0.9,0)
+// plane.rotation.set(Math.PI/2,0,0)
+// scene.add( plane );
+
 // Lights
-const light = new THREE.AmbientLight( 0xffffff,1); // soft white light
+const amblight = new THREE.AmbientLight( 0xffffff,1); // soft white light
+scene.add( amblight );
+
+const light = new THREE.DirectionalLight( 0xffffff, 1, 100 );
+light.position.set( 0,1, 0 ); //default; light shining from top
+light.castShadow = true; // default false
 scene.add( light );
 
+//Set up shadow properties for the light
+light.shadow.mapSize.width = 512; // default
+light.shadow.mapSize.height = 512; // default
+light.shadow.camera.near = 0.5; // default
+light.shadow.camera.far = 500; // default
 
 const pointLight2 = new THREE.PointLight(0xffffff,1)
-pointLight2.position.x =20
+pointLight2.position.x =50
 pointLight2.position.y = 1
 pointLight2.position.z = 1
 const pointLight = new THREE.PointLight(0xffffff,1)
@@ -54,6 +88,8 @@ pointLight5.position.y = 0
 pointLight5.position.z = 20
 pointLight5.position.x = 0
 scene.add(pointLight5)
+
+
 
 /**
  * Sizes
@@ -82,7 +118,7 @@ window.addEventListener('resize', () =>
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 0
 camera.position.y = 0
 camera.position.z = 2
@@ -109,7 +145,8 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 /**
  * Animate
  */
